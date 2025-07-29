@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGNITE-Unibuddy</title>
+    <!-- This script loads Tailwind CSS from the internet - no installation needed! -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* A little bit of custom CSS to hide pages by default */
+        .page {
+            display: none;
+        }
+        /* The active page will be shown */
+        .page.active {
+            display: flex; /* Use flex to center content */
+            justify-content: center;
+            align-items: center;
+        }
+        .picture-box {
+            transition: background-image 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-800 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-2xl font-bold">IGNITE-Unibuddy</h1>
+                </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <button onclick="showPage('home')" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900">Home</button>
+                        <button onclick="showPage('about')" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">About</button>
+                        <button onclick="showPage('contact')" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Contact</button>
+                    </div>
+                </div>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu, hidden by default -->
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button onclick="showPage('home')" class="nav-link mobile-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900">Home</button>
+                <button onclick="showPage('about')" class="nav-link mobile-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">About</button>
+                <button onclick="showPage('contact')" class="nav-link mobile-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Contact</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="py-6">
+        <!-- Home Page Content -->
+        <div id="home" class="page active">
+            <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+                <!-- Registration Form -->
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">Register</h2>
+                    <p class="text-gray-600 mb-6 text-center">Please fill out the form below to register.</p>
+                    <form onsubmit="return false;">
+                        <!-- Name, Phone, Stream, Semester... -->
+                        <div class="mb-4">
+                            <label for="reg-name" class="block text-gray-700 font-bold mb-2">Name</label>
+                            <input type="text" id="reg-name" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700" placeholder="Enter your full name">
+                        </div>
+                        <div class="mb-4">
+                            <label for="phone" class="block text-gray-700 font-bold mb-2">Phone Number</label>
+                            <input type="tel" id="phone" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700" placeholder="Enter your phone number">
+                        </div>
+                        <div class="mb-4">
+                            <label for="stream" class="block text-gray-700 font-bold mb-2">Stream</label>
+                            <select id="stream" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-white">
+                                <option>B tech</option>
+                                <option>MBA Tech</option>
+                            </select>
+                        </div>
+                        <div class="mb-6">
+                            <label for="semester" class="block text-gray-700 font-bold mb-2">Semester</label>
+                            <select id="semester" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-white">
+                                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+                            </select>
+                        </div>
+                        <!-- Submit Button -->
+                        <button id="register-button" type="button" onclick="validateAndRegister()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                            Register Now
+                        </button>
+                        <!-- Form Error Message -->
+                        <p id="form-error" class="text-red-500 text-center mt-4 h-4"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Page Content -->
+        <div id="about" class="page">
+             <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">About Us</h1>
+                <p class="text-gray-600 mb-4">
+                    We are a team of passionate developers and designers dedicated to creating beautiful, functional, and user-friendly web experiences.
+                </p>
+            </div>
+        </div>
+
+        <!-- Contact Page Content -->
+        <div id="contact" class="page">
+            <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">Contact Us</h1>
+                <form>
+                    <!-- Contact form fields... -->
+                    <div class="mb-4">
+                        <label for="name" class="block text-gray-700 font-bold mb-2">Name</label>
+                        <input type="text" id="name" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700">
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
+                        <input type="email" id="email" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700">
+                    </div>
+                    <div class="mb-6">
+                        <label for="message" class="block text-gray-700 font-bold mb-2">Message</label>
+                        <textarea id="message" rows="4" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Game Page Content -->
+        <div id="game-page" class="page">
+            <div class="bg-[#F3EADF] p-4 sm:p-8 rounded-lg shadow-2xl w-full max-w-6xl">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center font-serif">Unlock the Pictures</h2>
+                <!-- Book layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+                    <!-- Center line for book spine effect -->
+                    <div class="absolute left-1/2 top-0 bottom-0 w-1 bg-gray-300 hidden md:block" style="transform: translateX(-50%);"></div>
+
+                    <!-- Left Page -->
+                    <div class="space-y-6">
+                        <!-- Box 1, 2, 3 -->
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <div id="picture-box-1" class="picture-box h-48 w-full bg-gray-200 rounded-md flex items-center justify-center text-gray-500">Locked</div>
+                            <div class="mt-4">
+                                <input id="code-input-1" type="text" placeholder="Enter code..." class="w-full border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500">
+                                <button onclick="checkCode(1)" class="w-full mt-2 bg-gray-800 text-white py-2 rounded-md hover:bg-gray-700">Unlock</button>
+                                <p id="message-1" class="text-sm mt-2 text-center h-4"></p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <div id="picture-box-2" class="picture-box h-48 w-full bg-gray-200 rounded-md flex items-center justify-center text-gray-500">Locked</div>
+                            <div class="mt-4">
+                                <input id="code-input-2" type="text" placeholder="Enter code..." class="w-full border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500">
+                                <button onclick="checkCode(2)" class="w-full mt-2 bg-gray-800 text-white py-2 rounded-md hover:bg-gray-700">Unlock</button>
+                                <p id="message-2" class="text-sm mt-2 text-center h-4"></p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <div id="picture-box-3" class="picture-box h-48 w-full bg-gray-200 rounded-md flex items-center justify-center text-gray-500">Locked</div>
+                            <div class="mt-4">
+                                <input id="code-input-3" type="text" placeholder="Enter code..." class="w-full border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500">
+                                <button onclick="checkCode(3)" class="w-full mt-2 bg-gray-800 text-white py-2 rounded-md hover:bg-gray-700">Unlock</button>
+                                <p id="message-3" class="text-sm mt-2 text-center h-4"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Page -->
+                    <div class="space-y-6">
+                        <!-- Box 4, 5, 6 -->
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <div id="picture-box-4" class="picture-box h-48 w-full bg-gray-200 rounded-md flex items-center justify-center text-gray-500">Locked</div>
+                            <div class="mt-4">
+                                <input id="code-input-4" type="text" placeholder="Enter code..." class="w-full border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500">
+                                <button onclick="checkCode(4)" class="w-full mt-2 bg-gray-800 text-white py-2 rounded-md hover:bg-gray-700">Unlock</button>
+                                <p id="message-4" class="text-sm mt-2 text-center h-4"></p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <div id="picture-box-5" class="picture-box h-48 w-full bg-gray-200 rounded-md flex items-center justify-center text-gray-500">Locked</div>
+                            <div class="mt-4">
+                                <input id="code-input-5" type="text" placeholder="Enter code..." class="w-full border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500">
+                                <button onclick="checkCode(5)" class="w-full mt-2 bg-gray-800 text-white py-2 rounded-md hover:bg-gray-700">Unlock</button>
+                                <p id="message-5" class="text-sm mt-2 text-center h-4"></p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <div id="picture-box-6" class="picture-box h-48 w-full bg-gray-200 rounded-md flex items-center justify-center text-gray-500">Locked</div>
+                            <div class="mt-4">
+                                <input id="code-input-6" type="text" placeholder="Enter code..." class="w-full border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500">
+                                <button onclick="checkCode(6)" class="w-full mt-2 bg-gray-800 text-white py-2 rounded-md hover:bg-gray-700">Unlock</button>
+                                <p id="message-6" class="text-sm mt-2 text-center h-4"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- We are using type="module" to allow modern import syntax -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgWeY4NFCMk1EK1nxCfugd2EvoKMa5GSo",
+            authDomain: "ignite-unibuddy-registrations.firebaseapp.com",
+            projectId: "ignite-unibuddy-registrations",
+            storageBucket: "ignite-unibuddy-registrations.appspot.com",
+            messagingSenderId: "1006524944549",
+            appId: "1:1006524944549:web:50669b64651c3c93b5fd4c"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+
+        // --- Page Switching Logic ---
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+
+        function showPage(pageId) {
+            pages.forEach(page => { page.classList.remove('active'); });
+            const pageToShow = document.getElementById(pageId);
+            if (pageToShow) { pageToShow.classList.add('active'); }
+            
+            navLinks.forEach(link => {
+                link.classList.remove('bg-gray-900', 'text-white');
+                link.classList.add('text-gray-300', 'hover:bg-gray-700', 'hover:text-white');
+            });
+            
+            const activeLinks = document.querySelectorAll(`button[onclick="showPage('${pageId}')"]`);
+            activeLinks.forEach(link => { link.classList.add('bg-gray-900', 'text-white'); });
+            
+            mobileMenu.classList.add('hidden');
+        }
+        window.showPage = showPage; // Make function globally available
+
+        mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+
+        // --- Registration Validation ---
+        async function validateAndRegister() {
+            const nameInput = document.getElementById('reg-name');
+            const phoneInput = document.getElementById('phone');
+            const streamInput = document.getElementById('stream');
+            const semesterInput = document.getElementById('semester');
+            const errorEl = document.getElementById('form-error');
+            const registerButton = document.getElementById('register-button');
+
+            // 1. Validate form fields
+            if (nameInput.value.trim() === '' || phoneInput.value.trim() === '') {
+                errorEl.textContent = 'Please fill out Name and Phone Number.';
+                return; // Stop the function
+            }
+            
+            errorEl.textContent = ''; // Clear any previous error
+            registerButton.disabled = true;
+            registerButton.textContent = 'Registering...';
+            registerButton.classList.add('bg-gray-400');
+
+            try {
+                // 2. Save data to Firestore
+                const docRef = await addDoc(collection(db, "registrations"), {
+                    name: nameInput.value,
+                    phone: phoneInput.value,
+                    stream: streamInput.value,
+                    semester: semesterInput.value,
+                    registeredAt: new Date() // Add a timestamp
+                });
+                console.log("Document written with ID: ", docRef.id);
+                
+                // 3. Proceed to the next page on success
+                showPage('game-page');
+
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                errorEl.textContent = 'Registration failed. Please try again.';
+            } finally {
+                // Re-enable the button whether it succeeded or failed
+                registerButton.disabled = false;
+                registerButton.textContent = 'Register Now';
+                registerButton.classList.remove('bg-gray-400');
+            }
+        }
+        window.validateAndRegister = validateAndRegister; // Make function globally available
+
+        // --- Game Logic ---
+        const correctCodes = {
+            1: 'APPLE', 2: 'BANANA', 3: 'CHERRY',
+            4: 'DURIAN', 5: 'ELDER', 6: 'FIG'
+        };
+
+        const imageUrls = {
+            1: 'https://placehold.co/400x300/f87171/ffffff?text=I',
+            2: 'https://placehold.co/400x300/fbbf24/ffffff?text=G',
+            3: 'https://placehold.co/400x300/a78bfa/ffffff?text=N',
+            4: 'https://placehold.co/400x300/34d399/ffffff?text=I',
+            5: 'https://placehold.co/400x300/60a5fa/ffffff?text=T',
+            6: 'https://placehold.co/400x300/f472b6/ffffff?text=E'
+        };
+
+        function checkCode(boxNumber) {
+            const input = document.getElementById(`code-input-${boxNumber}`);
+            const pictureBox = document.getElementById(`picture-box-${boxNumber}`);
+            const messageEl = document.getElementById(`message-${boxNumber}`);
+            
+            if (input.value.trim().toUpperCase() === correctCodes[boxNumber]) {
+                pictureBox.style.backgroundImage = `url('${imageUrls[boxNumber]}')`;
+                pictureBox.style.backgroundSize = 'cover';
+                pictureBox.style.backgroundPosition = 'center';
+                pictureBox.textContent = ''; // Remove the "Locked" text
+                messageEl.textContent = 'Correct!';
+                messageEl.className = 'text-sm mt-2 text-center h-4 text-green-600';
+                input.disabled = true;
+                input.classList.add('bg-gray-100');
+                document.querySelector(`button[onclick="checkCode(${boxNumber})"]`).disabled = true;
+            } else {
+                messageEl.textContent = 'Wrong code. Try again.';
+                messageEl.className = 'text-sm mt-2 text-center h-4 text-red-600';
+            }
+        }
+        window.checkCode = checkCode; // Make function globally available
+    </script>
+
+</body>
+</html>
