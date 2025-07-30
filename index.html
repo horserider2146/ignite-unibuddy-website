@@ -209,7 +209,25 @@
     </main>
 
     <!-- JavaScript for Page Switching and Game Logic -->
-    <script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgWeY4NFCMk1EK1nxCfugd2EvoKMa5GSo",
+            authDomain: "ignite-unibuddy-registrations.firebaseapp.com",
+            projectId: "ignite-unibuddy-registrations",
+            storageBucket: "ignite-unibuddy-registrations.appspot.com",
+            messagingSenderId: "1006524944549",
+            appId: "1:1006524944549:web:50669b64651c3c93b5fd4c"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         // --- Page Switching and State Persistence Logic ---
         const pages = document.querySelectorAll('.page');
         const navLinks = document.querySelectorAll('.nav-link');
@@ -217,17 +235,11 @@
         const mobileMenuButton = document.getElementById('mobile-menu-button');
 
         function showPage(pageId) {
-            // Hide all pages
             pages.forEach(page => { page.classList.remove('active'); });
-            
-            // Show the selected page
             const pageToShow = document.getElementById(pageId);
             if (pageToShow) { pageToShow.classList.add('active'); }
-            
-            // Save the active page to localStorage
             localStorage.setItem('activePage', pageId);
 
-            // Update nav button styles
             navLinks.forEach(link => {
                 link.classList.remove('bg-gray-900', 'text-white');
                 link.classList.add('text-gray-300', 'hover:bg-gray-700', 'hover:text-white');
@@ -235,24 +247,20 @@
             const activeLinks = document.querySelectorAll(`button[onclick="showPage('${pageId}')"]`);
             activeLinks.forEach(link => { link.classList.add('bg-gray-900', 'text-white'); });
             
-            // Close mobile menu
             mobileMenu.classList.add('hidden');
         }
 
         // --- Event Listeners ---
         mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
 
-        // On page load, check for saved states in localStorage
         document.addEventListener('DOMContentLoaded', () => {
-            // Restore active page
             const savedPage = localStorage.getItem('activePage');
             if (savedPage) {
                 showPage(savedPage);
             } else {
-                showPage('home'); // Default to home page if nothing is saved
+                showPage('home');
             }
 
-            // Restore unlocked images
             const unlockedBoxes = JSON.parse(localStorage.getItem('unlockedBoxes')) || [];
             unlockedBoxes.forEach(boxNumber => {
                 const inputContainer = document.getElementById(`code-container-${boxNumber}`);
@@ -272,16 +280,41 @@
         });
 
         // --- Registration Validation ---
-        function validateAndRegister() {
+        async function validateAndRegister() {
             const nameInput = document.getElementById('reg-name');
             const phoneInput = document.getElementById('phone');
+            const streamInput = document.getElementById('stream');
+            const semesterInput = document.getElementById('semester');
             const errorEl = document.getElementById('form-error');
+            const registerButton = document.getElementById('register-button');
 
             if (nameInput.value.trim() === '' || phoneInput.value.trim() === '') {
                 errorEl.textContent = 'Please fill out Name and Phone Number.';
-            } else {
-                errorEl.textContent = '';
+                return;
+            }
+            
+            errorEl.textContent = '';
+            registerButton.disabled = true;
+            registerButton.textContent = 'Registering...';
+            registerButton.classList.add('bg-gray-400');
+
+            try {
+                const docRef = await addDoc(collection(db, "registrations"), {
+                    name: nameInput.value,
+                    phone: phoneInput.value,
+                    stream: streamInput.value,
+                    semester: semesterInput.value,
+                    registeredAt: new Date()
+                });
+                console.log("Document written with ID: ", docRef.id);
                 showPage('game-page');
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                errorEl.textContent = 'Registration failed. Please try again.';
+            } finally {
+                registerButton.disabled = false;
+                registerButton.textContent = 'Register Now';
+                registerButton.classList.remove('bg-gray-400');
             }
         }
 
@@ -292,12 +325,12 @@
         };
 
         const imageUrls = {
-            1: 'https://placehold.co/400x300/f87171/ffffff?text=I',
-            2: 'https://placehold.co/400x300/fbbf24/ffffff?text=G',
-            3: 'https://placehold.co/400x300/a78bfa/ffffff?text=N',
-            4: 'https://placehold.co/400x300/34d399/ffffff?text=I',
-            5: 'https://placehold.co/400x300/60a5fa/ffffff?text=T',
-            6: 'https://placehold.co/400x300/f472b6/ffffff?text=E'
+            1: 'https://placehold.co/400x300/f87171/ffffff?text=Picture+1',
+            2: 'https://placehold.co/400x300/fbbf24/ffffff?text=Picture+2',
+            3: 'https://placehold.co/400x300/a78bfa/ffffff?text=Picture+3',
+            4: 'https://placehold.co/400x300/34d399/ffffff?text=Picture+4',
+            5: 'https://placehold.co/400x300/60a5fa/ffffff?text=Picture+5',
+            6: 'https://placehold.co/400x300/f472b6/ffffff?text=Picture+6'
         };
 
         function checkCode(boxNumber) {
@@ -307,32 +340,26 @@
             const input = document.getElementById(`code-input-${boxNumber}`);
             
             if (input.value.trim().toUpperCase() === correctCodes[boxNumber]) {
-                // Correct code logic
                 pictureBox.style.backgroundImage = `url('${imageUrls[boxNumber]}')`;
                 pictureBox.style.backgroundSize = 'cover';
                 pictureBox.style.backgroundPosition = 'center';
                 pictureBox.textContent = '';
                 messageEl.textContent = 'Correct!';
                 messageEl.className = 'text-sm mt-2 text-center h-4 text-green-600';
-                
-                // Hide the input and button container
                 inputContainer.classList.add('hidden');
 
-                // Save the unlocked state
                 const unlockedBoxes = JSON.parse(localStorage.getItem('unlockedBoxes')) || [];
                 if (!unlockedBoxes.includes(boxNumber)) {
                     unlockedBoxes.push(boxNumber);
                     localStorage.setItem('unlockedBoxes', JSON.stringify(unlockedBoxes));
                 }
-
             } else {
-                // Incorrect code logic
                 messageEl.textContent = 'Incorrect code. Try again.';
                 messageEl.className = 'text-sm mt-2 text-center h-4 text-red-600';
             }
         }
 
-        // Make functions globally available so the HTML onclick attributes can find them
+        // Make functions globally available
         window.showPage = showPage;
         window.validateAndRegister = validateAndRegister;
         window.checkCode = checkCode;
